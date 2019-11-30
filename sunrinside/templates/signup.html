@@ -1,0 +1,13 @@
+{% block content %}
+<div class="container">
+    <h1>Sign Up!</h1>
+    <form action="{% url 'signup' %}" method="POST">
+        {% csrf_token %}
+        <label for="email_input">Email</label><br>
+        <input type="text" name="email" id="email_input"><br>
+        <label for="password_input">Password</label><br>
+        <input type="text" name="password" id="password_input"><br>
+        <input type="submit" value="Sign Up">
+    </form>
+</div>
+{% endblock %}
