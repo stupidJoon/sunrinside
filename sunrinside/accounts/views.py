@@ -25,10 +25,10 @@ def signin(request):
         user = auth.authenticate(request, username=username, password=password)
         if user is not None:
             auth.login(request, user)
-            return redirect("board")
+            return redirect("index")
         else:
             return render(request, 'login.html')
 
 def signout(request):
     auth.logout(request)
-    return redirect('board')
+    return redirect('index')

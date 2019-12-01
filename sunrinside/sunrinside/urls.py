@@ -19,6 +19,11 @@ import bbs.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', bbs.views.board, name="board"),
-    path('account/', include('accounts.urls'))
+    path('', bbs.views.index, name="index"),
+    path('account/', include('accounts.urls')),
+    path('<int:board_id>/', bbs.views.board, name='board'),
+    path('addboard/', bbs.views.addBoard, name='add_board'),
+    path('addarticle', bbs.views.addArticle, name='add_article'),
+    path('<int:board_id>/<int:article_id>/', bbs.views.article, name='article'),
+    path('addcomment', bbs.views.addComment, name='add_comment')
 ]

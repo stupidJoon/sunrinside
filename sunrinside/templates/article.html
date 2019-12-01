@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body style="height: 100%">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(52, 152, 219);">
+        <div class="container">
+            <a class="navbar-brand" href="/" style="font-weight: bold; font-size: 1.6rem;">SUNRINSIDE</a>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                <li class="navbar-item">
+                    <a href="{% url 'signout' %}" style="color:black; text-decoration: none;">로그아웃</a>
+                </li>
+                {% else %}
+                <li class="navbar-item mr-4">
+                    <a href="{% url 'signin' %}" style="color:black; text-decoration: none;">로그인</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid bg-secondary">
+        <div class="container">
+            <ul class="list-group list-group-horizontal">
+                {% for board in boards %}
+                {% if board.id == board_id %}
+                <li class="list-group-item bg-secondary active"><a href="{% url 'board' board.id %}"
+                        class="text-light">{{ board.title }}</a></li>
+                {% else %}
+                <li class="list-group-item bg-secondary"><a href="{% url 'board' board.id %}"
+                        class="text-light">{{ board.title }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if user.is_authenticated %}
+                <li class="list-group-item bg-secondary"><a href="" class="text-light" data-toggle="modal"
+                        data-target="#add_board">+</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="container" style="border: solid 1px gray; margin-top:2rem;height: 85%;">
+        <div class="container" style="margin-top:1rem;">
+            <h2 class="">
+                {{ article.title }}
+            </h2>
+            <hr style="border-color:black !important;">
+            <h5>{{ article.author }}</h5>
+        </div>
+        <div class="container" style="margin-top:5rem;margin-bottom: 10rem;">
+            <p>{{ article.text }}</p>
+        </div>
+        <div class="container">
+            <h5>댓글
+                <p style="display: inline" name="comment_num">{{ comments|length }}</p>
+            </h5>
+            <hr style="border-color:black !important;">
+            {% for comment in comments %}
+            <h6 class="mb-4">{{ comment.author }}
+                <p style="display:inline;margin-left:2rem;">{{ comment.text }}</p>
+            </h6>
+            {% endfor %}
+            <form method="POST" action="{% url 'add_comment' %}">
+                {% csrf_token %}
+                <input type="hidden" name="board_id" value="{{ board_id }}">
+                <input type="hidden" name="article_id" value="{{ article.id }}">
+                <div class="form-group">
+                    <label for="comment_textarea">댓글 작성</label>
+                    <textarea cols="10" placeholder="내용을 입력하세요." name="text" class="form-control" rows="3" id="comment_textarea"></textarea>
+                </div>
+                {% if user.is_authenticated %}
+                    <button type="submit" class="btn btn-primary">작성</button>
+                {% else %}
+                    <button type="submit" class="btn btn-primary" disabled>로그인 하고 댓글을 작성해 주세요</button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
